@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Find Essential Services</title>
+  <style>
+    /* CSS for video background */
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .video-background video {
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+    }
+
+    /* Rest of your styles */
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .search-form {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      padding: 10px;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 5px 0 0 5px;
+    }
+
+    .search-button {
+      padding: 10px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+    }
+
+    .nav {
+      background-color: #333;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between; 
+      height: 80px;
+      padding: 0 20px; /* Added to create space around logo and links */
+    }
+
+    .nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 10px;
+      margin-left: 70px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="video-background">
+    <video autoplay loop muted>
+      <source src="static/videos/bgvideo.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <header>
+    <div class="nav">
+      <a href="#" class="logo">FindIt</a>
+      <div>
+        <a href="#">Home</a>
+        <a href="#">Services</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <h1>Find Essential Services</h1>
+    <div class="search-form">
+      <input id="location-input" class="search-input" type="text" placeholder="Enter your location">
+      <button id="search-button" class="search-button">Search</button>
+    </div>
+    <div id="map" style="width: 100%; height: 400px;"></div>
+  </div>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvM7K8qyUn7OvRBasC1M4jO3BIrK6vzo4&libraries=places"></script>
+  <script>
+    function initMap() {
+      var locationInput = document.getElementById('location-input');
+      var searchButton = document.getElementById('search-button');
+      var map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 15
+      });
+
+      searchButton.addEventListener('click', function() {
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ address: locationInput.value }, function(results, status) {
+          if (status === 'OK') {
+            map.setCenter(results[0].geometry.location);
+
+            var request = {
+              location: results[0].geometry.location,
+              radius: 500, // Adjust the search radius as per your preference
+              types: ['lodging', 'hotel', 'restaurant', 'butchery' 'hospital', 'store'] // Types of places to search for
+            };
+
+            var service = new google.maps.places.PlacesService(map);
+            service.nearbySearch(request, function(results, status) {
+              if (status === google.maps.places.PlacesServiceStatus.OK) {
+                for (var i = 0; i < results.length; i++) {
+                  var place = results[i];
+                  // Process each place result as per your requirement
+                  console.log(place);
+                }
+              }
+            });
+          } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+      });
+    }
+
+    window.addEventListener('load', initMap);
+  </script>
+</body>
+</html>
