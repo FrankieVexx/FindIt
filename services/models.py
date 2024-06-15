@@ -2,7 +2,11 @@ import models
 
 def signup(model.models)
     if method = "POST"
-    pass
+    
+    firstname = request.POST['firstname']
+    lastname = request.POST['lastname']
+    email = request.POST['email']
+    password = request.POST['password']
 
-    else:
-    print("We are just getting started")
+    user = User.objects.create_user(firstname=firstname, lastname=lastname, email=email, password=password)
+    user.save()
